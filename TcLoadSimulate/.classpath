@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/commons-codec.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/xerces.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaClient_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaCommon_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaCoreStrong_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaStrongModel_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaQueryStrong_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaCadStrong_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/log4j.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/commons-logging.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/logkit-1.2.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaCadTypes_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaCoreTypes_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/TcSoaQueryTypes_8000.3.0.jar"/>
+	<classpathentry kind="var" path="SOA_LIBS/833/commons-lang3-3.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
