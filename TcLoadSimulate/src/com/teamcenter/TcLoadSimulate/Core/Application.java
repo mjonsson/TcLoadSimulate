@@ -152,17 +152,21 @@ public class Application {
 			}
 
 			if (TcLoadSimulate.gui) {
-				for (final Worker w : workerList) {
-					w.initialize();
+				if (workerList != null) {
+					for (final Worker w : workerList) {
+						w.initialize();
+					}
 				}
 				UserInterface.loop();
 			} else {
-				for (Worker w : workerList) {
-					w.initialize();
-				}
-				startWorkers(Arrays.asList(workerList));
-				for (Worker w : workerList) {
-					w.myThread.join();
+				if (workerList != null) {
+					for (Worker w : workerList) {
+						w.initialize();
+					}
+					startWorkers(Arrays.asList(workerList));
+					for (Worker w : workerList) {
+						w.myThread.join();
+					}
 				}
 			}
 		} catch (Exception e) {

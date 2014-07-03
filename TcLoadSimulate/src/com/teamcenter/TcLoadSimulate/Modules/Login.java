@@ -33,6 +33,7 @@ public final class Login extends Module {
 	 * connection.
 	 */
 	private String discriminator = null;
+	private String tcWebTier = null;
 	private String tcServerid = null;
 	private String tcSyslog = null;
 	private String tcHostname = null;
@@ -126,12 +127,13 @@ public final class Login extends Module {
 
 		Session.GetTCSessionInfoResponse response = ss.getTCSessionInfo();
 
+		tcWebTier = connection.getServerAddress();
 		tcServerid = (String) response.extraInfo.get("TcServerID");
 		tcHostname = (String) response.extraInfo.get("hostName");
 		tcSyslog = (String) response.extraInfo.get("syslogFile");
 
 		miscInfo = String.format(
-				"Server Id.: %s, Hostname: %s, Syslog: %s", tcServerid,
+				"WebTier: %s, Server Id.: %s, Hostname: %s, Syslog: %s", tcWebTier, tcServerid,
 				tcHostname, tcSyslog);
 	}
 

@@ -47,7 +47,7 @@ public abstract class ApplicationObject {
 	/**
 	 * Sets the format of the dateformat object.
 	 */
-	private final DateFormat dateFormat = new SimpleDateFormat(
+	private static final DateFormat dateFormat = new SimpleDateFormat(
 			"yy/MM/dd HH:mm:ss");
 
 	/**

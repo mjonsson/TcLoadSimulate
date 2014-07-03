@@ -31,24 +31,47 @@ public final class TcLoadSimulate {
 	 */
 	public static final void start() {
 		try {
-			appPath = new File(TcLoadSimulate.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath());
 			JAXBContext context = JAXBContext.newInstance(Application.class);
 			Unmarshaller um = context.createUnmarshaller();
 
-			if (configurationFile == null)
-				configurationFile = new File(appPath.getPath() + "\\TcLoadSimulate.xml");
-			
-			if (configurationFile.exists()) {
+			if (configurationFile != null && configurationFile.exists()) {
 				app = (Application) um.unmarshal(new FileInputStream(configurationFile));
 			}
+			else if (!gui) {
+				throw new Exception("Configuration file does not exist.");
+			}
+			else
+			{
+				app = new Application();
+			}
 			
-			if (app != null)
-				app.init();
+			app.init();
+
 		} catch (Exception e) {
-			UserInterface.DisplayError("Initialization error", e);
-			UserInterface.loop();
+			if (gui) {
+				UserInterface.DisplayError("Initialization error", e);
+				UserInterface.loop();
+			}
+			else
+			{
+				e.printStackTrace();
+			}
 		}
+	}
+	
+	public static final String parseArgs(String[] args, String arg)
+	{
+		
+		for (String a : args) {
+			String aLc = a.toLowerCase();
+			String argLc = arg.toLowerCase();
+			if (aLc.equals(argLc))
+				return argLc;
+			else if (aLc.startsWith(argLc + "="))
+				return aLc.split("=")[1];
+		}
+
+		return null;
 	}
 
 	/**
@@ -59,13 +82,22 @@ public final class TcLoadSimulate {
 	 *            Args passed from command line.
 	 */
 	public static final void main(String[] args) {
-
+		String config;
+		
 		try {
-			if (System.getProperty("debug") != null)
-				debug = true;
-			if (System.getProperty("nogui") != null)
-				gui = false;
+			appPath = new File(TcLoadSimulate.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath());
 
+			if (parseArgs(args, "-debug") != null)
+				debug = true;
+			if (parseArgs(args, "-nogui") != null)
+				gui = false;
+			if ((config = parseArgs(args, "-config")) != null)
+				configurationFile = new File(config); 
+			
+			if (!gui && configurationFile == null)
+				throw new Exception("No configuration defined.");
+			
 			// Register shutdown hook to capture kill events
 			Shutdown shutdownHook = new Shutdown();
 			Runtime.getRuntime().addShutdownHook(shutdownHook.init());

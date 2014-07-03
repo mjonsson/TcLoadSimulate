@@ -240,7 +240,7 @@ public class UserInterface implements EventListener {
 				final FileDialog dlg = new FileDialog(shell, SWT.OPEN);
 				dlg.setText("Select configuration file");
 				dlg.setFilterExtensions(new String[] { "*.xml" });
-				if (TcLoadSimulate.configurationFile != null)
+				if (TcLoadSimulate.configurationFile != null && TcLoadSimulate.configurationFile.exists())
 					dlg.setFilterPath(TcLoadSimulate.configurationFile
 							.getParent());
 				else
@@ -266,9 +266,10 @@ public class UserInterface implements EventListener {
 		outputFile.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				Text t = (Text) e.widget;
+				if (t.getText().isEmpty()) return;
 				table.deselectAll();
 				table.notifyListeners(SWT.Selection, new Event());
-				Text t = (Text) e.widget;
 				File file = new File(t.getText());
 				Logger.reset();
 				try {
