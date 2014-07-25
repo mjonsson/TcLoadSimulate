@@ -56,13 +56,15 @@ public final class Login extends Module {
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("deprecation")
 	private final void initialize() throws Exception {
 		credentialManager = new CredentialManagerImpl();
+		tcWebTier = getSetting("endpoint");
 
-		String protocol = getSetting("endpoint").toLowerCase()
+		String protocol = tcWebTier.toLowerCase()
 				.startsWith("http") ? SoaConstants.HTTP : SoaConstants.IIOP;
 
-		connection = new Connection(getSetting("endpoint"), new HttpState(),
+		connection = new Connection(tcWebTier, new HttpState(),
 				credentialManager, SoaConstants.REST, protocol, false);
 
 		// Add an ExceptionHandler to the Connection, this will handle any
@@ -127,7 +129,6 @@ public final class Login extends Module {
 
 		Session.GetTCSessionInfoResponse response = ss.getTCSessionInfo();
 
-		tcWebTier = connection.getServerAddress();
 		tcServerid = (String) response.extraInfo.get("TcServerID");
 		tcHostname = (String) response.extraInfo.get("hostName");
 		tcSyslog = (String) response.extraInfo.get("syslogFile");

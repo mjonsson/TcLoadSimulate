@@ -56,6 +56,7 @@ public final class WhereUsed extends QueryModule {
 		boolean precise = getSettingAsBool("precise_search");
 
 		timer.start();
+		@SuppressWarnings("deprecation")
 		WhereUsedResponse response1 = dm.whereUsed(queryObjects, levels,
 				precise, null);
 
