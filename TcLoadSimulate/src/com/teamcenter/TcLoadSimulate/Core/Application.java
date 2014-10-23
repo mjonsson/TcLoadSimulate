@@ -86,7 +86,7 @@ public class Application {
 	 * @param workers
 	 *            List of workers
 	 */
-	public static final void startWorkers(final List<Worker> workers) {
+	public static final Thread startWorkers(final List<Worker> workers) {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -105,6 +105,8 @@ public class Application {
 		t.setName("Start");
 		t.setDaemon(true);
 		t.start();
+		
+		return t;
 	}
 
 	/**
@@ -163,14 +165,22 @@ public class Application {
 					for (Worker w : workerList) {
 						w.initialize();
 					}
-					startWorkers(Arrays.asList(workerList));
+					Thread t = startWorkers(Arrays.asList(workerList));
+					t.join();
 					for (Worker w : workerList) {
 						w.myThread.join();
 					}
 				}
 			}
 		} catch (Exception e) {
-			UserInterface.DisplayError("Initialization error", e);
+			if (TcLoadSimulate.gui) {
+				UserInterface.DisplayError("Initialization error", e);
+				UserInterface.loop();
+			}
+			else
+			{
+				e.printStackTrace();
+			}
 		}
 		System.exit(0);
 	}

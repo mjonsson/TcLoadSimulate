@@ -83,6 +83,7 @@ public final class TcLoadSimulate {
 	 */
 	public static final void main(String[] args) {
 		String config;
+		String output;
 		
 		try {
 			appPath = new File(TcLoadSimulate.class.getProtectionDomain()
@@ -94,6 +95,8 @@ public final class TcLoadSimulate {
 				gui = false;
 			if ((config = parseArgs(args, "-config")) != null)
 				configurationFile = new File(config); 
+			if ((output = parseArgs(args, "-output")) != null)
+				outputFile = new File(output); 
 			
 			if (!gui && configurationFile == null)
 				throw new Exception("No configuration defined.");
@@ -102,10 +105,12 @@ public final class TcLoadSimulate {
 			Shutdown shutdownHook = new Shutdown();
 			Runtime.getRuntime().addShutdownHook(shutdownHook.init());
 
-			userInterface = new UserInterface();
 			logger = new Logger();
 			if (gui)
+			{
+				userInterface = new UserInterface();
 				UserInterface.init();
+			}
 			
 			start();
 		} catch (Exception e) {

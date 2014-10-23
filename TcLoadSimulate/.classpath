@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME"/>
 	<classpathentry kind="lib" path="C:/Users/jonssonm/Documents/GitHub/TcLoadSimulate/Libs/swt.jar"/>
 	<classpathentry kind="lib" path="D:/App/Teamcenter_10_1/soa_client/java/libs/Ads0SoaAdsFoundationLoose_10000.1.0.jar"/>
 	<classpathentry kind="lib" path="D:/App/Teamcenter_10_1/soa_client/java/libs/Ads0SoaAdsFoundationStrong_10000.1.0.jar"/>

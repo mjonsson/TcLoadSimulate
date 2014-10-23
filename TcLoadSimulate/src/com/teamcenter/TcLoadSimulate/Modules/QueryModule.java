@@ -44,7 +44,7 @@ public class QueryModule extends Module {
 		super(copy);
 	}
 
-	public QueryModule(String id, String type, Setting[] settingsList) {
+	public QueryModule(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

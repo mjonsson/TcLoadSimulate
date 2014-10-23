@@ -17,7 +17,7 @@ if x%SWT_LIB%==x goto NO_SWT
 if not exist "%SWT_LIB%" goto NO_SWT
 
 :: Start TcLoadSimulate
-start "" /b java -cp "%~dp0\TcLoadSimulate.jar;%SWT_LIB%;%SOA_CLIENT%\*" com.teamcenter.TcLoadSimulate.TcLoadSimulate
+java -cp "%~dp0\TcLoadSimulate.jar;%SWT_LIB%;%SOA_CLIENT%\*" com.teamcenter.TcLoadSimulate.TcLoadSimulate -nogui %*
 
 goto EXIT
 

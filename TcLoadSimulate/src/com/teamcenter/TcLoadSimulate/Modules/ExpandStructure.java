@@ -68,7 +68,7 @@ public final class ExpandStructure extends Module {
 		super(copy);
 	}
 
-	public ExpandStructure(String id, String type, Setting[] settingsList) {
+	public ExpandStructure(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

@@ -18,7 +18,7 @@ public final class Logout extends Module {
 		super(copy);
 	}
 
-	public Logout(String id, String type, Setting[] settingsList) {
+	public Logout(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

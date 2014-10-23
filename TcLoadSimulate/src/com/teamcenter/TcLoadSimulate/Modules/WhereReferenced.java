@@ -27,7 +27,7 @@ public final class WhereReferenced extends QueryModule {
 		super(copy);
 	}
 
-	public WhereReferenced(String id, String type, Setting[] settingsList) {
+	public WhereReferenced(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

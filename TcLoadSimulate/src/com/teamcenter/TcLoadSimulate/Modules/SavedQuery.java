@@ -16,7 +16,7 @@ public final class SavedQuery extends QueryModule {
 		super(copy);
 	}
 
-	public SavedQuery(String id, String type, Setting[] settingsList) {
+	public SavedQuery(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

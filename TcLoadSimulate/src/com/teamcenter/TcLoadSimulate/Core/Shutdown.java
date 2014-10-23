@@ -1,5 +1,7 @@
 package com.teamcenter.TcLoadSimulate.Core;
 
+import java.util.ArrayList;
+
 /**
  * A thread instance of this class is created if user presses ctrl^c during
  * program execution in a console window or if the application is closed with
@@ -8,6 +10,12 @@ package com.teamcenter.TcLoadSimulate.Core;
  * 
  */
 public final class Shutdown implements Runnable {
+	private static ArrayList<Thread> workerThreads = new ArrayList<Thread>();
+
+	public final static void registerThread(Thread thread) {
+		workerThreads.add(thread);
+	}
+	
 	/**
 	 * Initializes the thread before execution.
 	 * 
@@ -39,15 +47,10 @@ public final class Shutdown implements Runnable {
 	@Override
 	public final void run() {
 		try {
-			Thread[] allThreads = new Thread[Thread.activeCount()];
-			Thread.enumerate(allThreads);
+			System.err.println("\nWaiting for workers to finish exit sequence...\n");
 
-			System.err.println("\nLooking for active workers...\n");
-
-			for (Thread t : allThreads) {
-				if (!t.getName()
-						.matches(
-								"UserInterface|Shutdown|MultiThreadedHttpConnectionManager cleanup|DestroyJavaVM|Thread-0")) {
+			for (Thread t : workerThreads) {
+				if (t.isAlive()) {
 					t.interrupt();
 					Thread.sleep(Long.parseLong(Application
 							.getGlobal("stop_delay")) * 1000);

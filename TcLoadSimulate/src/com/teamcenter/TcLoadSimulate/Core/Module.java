@@ -16,6 +16,10 @@ public class Module extends ApplicationObject {
 	protected String strPropertyPolicy;
 	protected String timeDelta;
 	protected String miscInfo;
+	private int retryCount = 0;
+	private int retries = 0;
+	private long retryInterval = 10;
+	private long sleepInterval = 30;
 
 	/**
 	 * Property representing the module type
@@ -46,9 +50,12 @@ public class Module extends ApplicationObject {
 	 * @param settingsList
 	 *            Local object settings.
 	 */
-	public Module(String id, String type, Setting[] settingsList) {
+	public Module(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, settingsList);
 		this.type = type;
+		this.retryCount = getSettingAsInt("retry_count");
+		this.retryInterval = getSettingAsLong("retry_interval");
+		this.sleepInterval = getParsedSettingAsLong("sleep");
 	}
 
 	public String getTimeDelta() {
@@ -59,6 +66,22 @@ public class Module extends ApplicationObject {
 	public String getMiscInfo() {
 		if (miscInfo == null) return "";
 		return miscInfo;
+	}
+	
+	public boolean continueOnError() {
+		if (retryCount == 0) return true;
+		else if (retries >= retryCount) return false;
+		retries++;
+		
+		return true;
+	}
+
+	public void resetRetryCount() {
+		retries = 0;
+	}
+	
+	public void retrySleep() throws Exception {
+		Thread.sleep(retryInterval * 1000);
 	}
 
 	/**
@@ -95,7 +118,7 @@ public class Module extends ApplicationObject {
 	 * @throws Exception
 	 */
 	public void sleep() throws Exception {
-		Thread.sleep(getParsedSettingAsLong("sleep") * 1000);
+		Thread.sleep(sleepInterval * 1000);
 	}
 
 	/**

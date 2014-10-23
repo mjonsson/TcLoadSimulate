@@ -24,7 +24,7 @@ public final class WhereUsed extends QueryModule {
 		super(copy);
 	}
 
-	public WhereUsed(String id, String type, Setting[] settingsList) {
+	public WhereUsed(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

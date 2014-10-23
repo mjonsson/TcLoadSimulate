@@ -9,6 +9,10 @@
 		<setting name="sleep" value="[RandNr(10,20]"/>
 		<!-- Path to output .csv-file -->
 		<setting name="data_file" value="C:/Temp/output.csv"/>
+		<!-- How many times shall a module retry a failed action -->
+		<setting name="retry_count" value="0"/>
+		<!-- How long shall a module wait before retrying action -->
+		<setting name="retry_interval" value="5"/>
 	</globals>
 	<!-- This section contains all available modules -->
 	<modules>

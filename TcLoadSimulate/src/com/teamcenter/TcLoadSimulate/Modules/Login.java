@@ -46,7 +46,7 @@ public final class Login extends Module {
 		super(copy);
 	}
 
-	public Login(String id, String type, Setting[] settingsList) {
+	public Login(String id, String type, Setting[] settingsList) throws Exception {
 		super(id, type, settingsList);
 	}
 

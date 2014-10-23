@@ -97,6 +97,7 @@ public final class Worker extends ApplicationObject implements Runnable {
 		if (mode == Mode.STOPPED) {
 			myThread = new Thread(this, id);
 			myThread.setDaemon(false);
+			Shutdown.registerThread(myThread);
 			myThread.start();
 		}
 	}
@@ -164,14 +165,52 @@ public final class Worker extends ApplicationObject implements Runnable {
 			mo.moduleObj = (Module) construct.newInstance(mod.id, mod.type,
 					mergeSettings(mo.settingsList, mod.settingsList));
 		}
-		final TableItem tableItem = new TableItem(UserInterface.getTable(),
-				SWT.NONE);
-		tableItem.setData("worker", this);
-		this.tableItem = tableItem;
-		tableItem.setText(new String[] { null, null, "---", id, "---", "---",
-				"---", "---" });
-		addEventListener(TcLoadSimulate.userInterface);
+		if (TcLoadSimulate.gui) {
+			final TableItem tableItem = new TableItem(UserInterface.getTable(),
+					SWT.NONE);
+			tableItem.setData("worker", this);
+			this.tableItem = tableItem;
+			tableItem.setText(new String[] { null, null, "---", id, "---",
+					"---", "---", "---" });
+			addEventListener(TcLoadSimulate.userInterface);
+		}
 		addEventListener(TcLoadSimulate.logger);
+	}
+
+	public final void runModule(ModuleOcc mo) throws Exception {
+		// Get module for current task
+		module = mo.moduleObj;
+
+		// Enter running phase
+		status = Status.RUNNING;
+		fireEvent();
+
+		try {
+			if (module instanceof Login)
+				connection = module.run();
+			else {
+				if (mo.probability == 100 || rnd.nextInt(100) <= mo.probability)
+					module.run(connection);
+				else
+					return;
+			}
+		} catch (InterruptedException e) {
+			throw e;
+		} catch (Exception e) {
+			status = Status.ERROR;
+			fireEvent();
+			Console.err(e);
+			if (!module.continueOnError()) {
+				throw e;
+			}
+			module.retrySleep();
+			runModule(mo);
+		}
+		// Enter sleep phase
+		status = Status.SLEEPING;
+		fireEvent();
+		module.resetRetryCount();
+		module.sleep();
 	}
 
 	/**
@@ -192,8 +231,10 @@ public final class Worker extends ApplicationObject implements Runnable {
 			totalTasks = 0;
 			totalIterations = getSettingAsInt("iterations");
 			for (ModuleOcc mo : sequenceList) {
-				if (mo.runonce.equals("false")) totalTasks += totalIterations;
-				else totalTasks++;
+				if (mo.runonce.equals("false"))
+					totalTasks += totalIterations;
+				else
+					totalTasks++;
 			}
 
 			for (iterations = 1; !Thread.interrupted()
@@ -204,27 +245,7 @@ public final class Worker extends ApplicationObject implements Runnable {
 							|| (mo.runonce.equals("end") && iterations == totalIterations)) {
 						tasks++;
 
-						// Get module for current task
-						module = mo.moduleObj;
-
-						// Enter running phase
-						status = Status.RUNNING;
-						fireEvent();
-
-						if (module instanceof Login)
-							connection = module.run();
-						else {
-							if (mo.probability == 100
-									|| rnd.nextInt(100) <= mo.probability)
-								module.run(connection);
-							else
-								continue;
-						}
-
-						// Enter sleep phase
-						status = Status.SLEEPING;
-						fireEvent();
-						module.sleep();
+						runModule(mo);
 					}
 				}
 			}
