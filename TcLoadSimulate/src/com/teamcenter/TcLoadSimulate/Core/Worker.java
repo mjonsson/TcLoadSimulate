@@ -94,10 +94,10 @@ public final class Worker extends ApplicationObject implements Runnable {
 	 * @throws Exception
 	 */
 	public void start() {
-		if (mode == Mode.STOPPED) {
+		if (mode == Mode.STOPPED && !Shutdown.isShutdownInitiated()) {
 			myThread = new Thread(this, id);
-			myThread.setDaemon(false);
 			Shutdown.registerThread(myThread);
+			myThread.setDaemon(true);
 			myThread.start();
 		}
 	}
@@ -197,12 +197,12 @@ public final class Worker extends ApplicationObject implements Runnable {
 		} catch (InterruptedException e) {
 			throw e;
 		} catch (Exception e) {
-			status = Status.ERROR;
-			fireEvent();
-			Console.err(e);
 			if (!module.continueOnError()) {
 				throw e;
 			}
+			status = Status.ERROR;
+			fireEvent();
+			Console.err(e);
 			module.retrySleep();
 			runModule(mo);
 		}
@@ -237,8 +237,7 @@ public final class Worker extends ApplicationObject implements Runnable {
 					totalTasks++;
 			}
 
-			for (iterations = 1; !Thread.interrupted()
-					&& (totalIterations == 0 || iterations <= totalIterations); iterations++) {
+			for (iterations = 1; totalIterations == 0 || iterations <= totalIterations; iterations++) {
 				for (ModuleOcc mo : sequenceList) {
 					if (mo.runonce.equals("false")
 							|| (mo.runonce.equals("start") && iterations == 1)
@@ -250,19 +249,15 @@ public final class Worker extends ApplicationObject implements Runnable {
 				}
 			}
 			iterations = totalIterations;
-			mode = Mode.STOPPED;
 			status = Status.FINISHED;
-			fireEvent();
 		} catch (InterruptedException e) {
-			mode = Mode.STOPPED;
 			status = Status.FINISHED;
-			fireEvent();
 		} catch (Exception e) {
-			mode = Mode.STOPPED;
 			status = Status.ERROR;
-			fireEvent();
 			Console.err(e);
 		} finally {
+			mode = Mode.STOPPED;
+			fireEvent();
 			// Make sure the session is logged out
 			try {
 				if (connection != null) {

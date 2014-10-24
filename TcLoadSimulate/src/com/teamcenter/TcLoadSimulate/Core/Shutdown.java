@@ -10,9 +10,10 @@ import java.util.ArrayList;
  * 
  */
 public final class Shutdown implements Runnable {
+	private static boolean shutdownInitiated = false;
 	private static ArrayList<Thread> workerThreads = new ArrayList<Thread>();
 
-	public final static void registerThread(Thread thread) {
+	public final static synchronized void registerThread(Thread thread) {
 		workerThreads.add(thread);
 	}
 	
@@ -23,20 +24,13 @@ public final class Shutdown implements Runnable {
 	 */
 	public final Thread init() {
 		Thread thread = new Thread(this, "Shutdown");
+		thread.setDaemon(true);
 
 		return thread;
 	}
 
-	/**
-	 * Executes the shutdown thread.
-	 * 
-	 * @return The initialized thread.
-	 */
-	public final Thread start() {
-		Thread thread = init();
-		thread.start();
-
-		return thread;
+	public final static boolean isShutdownInitiated() {
+		return shutdownInitiated;
 	}
 
 	/**
@@ -46,8 +40,9 @@ public final class Shutdown implements Runnable {
 	 */
 	@Override
 	public final void run() {
+		shutdownInitiated = true;
 		try {
-			System.err.println("\nWaiting for workers to finish exit sequence...\n");
+			System.err.println("\nWaiting for worker threads to shutdown gracefully...\n\n");
 
 			for (Thread t : workerThreads) {
 				if (t.isAlive()) {
@@ -58,6 +53,9 @@ public final class Shutdown implements Runnable {
 				}
 			}
 		} catch (Exception e) {
+		}
+		finally {
+			System.err.println("\nAll worker threads has shutdown. Exiting...\n\n");
 		}
 	}
 }

@@ -92,10 +92,8 @@ public class Application {
 			public void run() {
 				try {
 					for (Worker w : workers) {
-						if (w.mode == Mode.STOPPED) {
-							w.start();
-							Thread.sleep(w.getSettingAsLong("start_delay") * 1000);
-						}
+						w.start();
+						Thread.sleep(w.getSettingAsLong("start_delay") * 1000);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -105,7 +103,7 @@ public class Application {
 		t.setName("Start");
 		t.setDaemon(true);
 		t.start();
-		
+
 		return t;
 	}
 
@@ -176,9 +174,7 @@ public class Application {
 			if (TcLoadSimulate.gui) {
 				UserInterface.DisplayError("Initialization error", e);
 				UserInterface.loop();
-			}
-			else
-			{
+			} else {
 				e.printStackTrace();
 			}
 		}

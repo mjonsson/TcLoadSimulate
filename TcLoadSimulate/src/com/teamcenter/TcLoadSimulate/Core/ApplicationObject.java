@@ -43,7 +43,7 @@ public abstract class ApplicationObject {
 	/**
 	 * Initializes a new Random object with a seed.
 	 */
-	protected final Random rnd = new Random(System.currentTimeMillis());
+	protected static final Random rnd = new Random(System.currentTimeMillis());
 	/**
 	 * Sets the format of the dateformat object.
 	 */
@@ -53,7 +53,7 @@ public abstract class ApplicationObject {
 	/**
 	 * List of objects listening to events from this object
 	 */
-	protected List<EventListener> eventListeners = new ArrayList<EventListener>();
+	private static final List<EventListener> eventListeners = new ArrayList<EventListener>();
 
 	/**
 	 * Property representing global unique id for all objects
@@ -96,15 +96,15 @@ public abstract class ApplicationObject {
 			this.settingsList = settingsList.clone();
 	}
 
-	public synchronized void addEventListener(EventListener listener) {
+	protected static final synchronized void addEventListener(EventListener listener) {
 		eventListeners.add(listener);
 	}
 
-	public synchronized void removeEventListener(EventListener listener) {
+	protected static final synchronized void removeEventListener(EventListener listener) {
 		eventListeners.remove(listener);
 	}
 
-	protected synchronized void fireEvent() {
+	protected final synchronized void fireEvent() {
 		Event event = new Event(this);
 		for (EventListener l : eventListeners)
 			l.handleWorkerEvent(event);
@@ -218,7 +218,7 @@ public abstract class ApplicationObject {
 	 * @return The parsed value.
 	 * @throws Exception
 	 */
-	protected final String parseValue(String value) throws Exception {
+	protected static final synchronized String parseValue(String value) throws Exception {
 		Matcher mNr = pNr.matcher(value);
 
 		// Parse for "RandNr" statement
@@ -251,7 +251,7 @@ public abstract class ApplicationObject {
 	 * @return A string representing the date.
 	 * @throws Exception
 	 */
-	public final String getDate() {
+	protected static final synchronized String getDate() {
 		return dateFormat.format(new Date());
 	}
 
