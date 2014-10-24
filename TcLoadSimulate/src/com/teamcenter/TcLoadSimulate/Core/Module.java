@@ -117,7 +117,7 @@ public class Module extends ApplicationObject {
 	 * 
 	 * @throws Exception
 	 */
-	public final void sleep() throws Exception {
+	public void sleep() throws Exception {
 		Thread.sleep(sleepInterval * 1000);
 	}
 

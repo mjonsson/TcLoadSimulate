@@ -94,10 +94,10 @@ public final class Worker extends ApplicationObject implements Runnable {
 	 * @throws Exception
 	 */
 	public void start() {
-		if (mode == Mode.STOPPED && !Shutdown.isShutdownInitiated()) {
+		if (mode == Mode.STOPPED) {
 			myThread = new Thread(this, id);
-			Shutdown.registerThread(myThread);
 			myThread.setDaemon(false);
+			Shutdown.registerThread(myThread);
 			myThread.start();
 		}
 	}
@@ -237,7 +237,8 @@ public final class Worker extends ApplicationObject implements Runnable {
 					totalTasks++;
 			}
 
-			for (iterations = 1; totalIterations == 0 || iterations <= totalIterations; iterations++) {
+			for (iterations = 1; !Thread.interrupted()
+					&& (totalIterations == 0 || iterations <= totalIterations); iterations++) {
 				for (ModuleOcc mo : sequenceList) {
 					if (mo.runonce.equals("false")
 							|| (mo.runonce.equals("start") && iterations == 1)
